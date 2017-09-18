@@ -37,6 +37,8 @@
 
 -(void)reloadWebView;
 
+- (void)webViewDidFinishLoad:(UIWebView *)webView;
+
 @end
 
 
