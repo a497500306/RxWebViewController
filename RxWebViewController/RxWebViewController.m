@@ -189,6 +189,9 @@
         return;
     }
     
+    
+    __unsafe_unretained typeof(self) weakSelf = self;
+    
     //prevent the user touch for now
     self.view.userInteractionEnabled = NO;
     
@@ -197,35 +200,35 @@
         [UIView animateWithDuration:0.2 animations:^{
             [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
             
-            self.currentSnapShotView.center = CGPointMake(boundsWidth*3/2, boundsHeight/2);
-            self.prevSnapShotView.center = CGPointMake(boundsWidth/2, boundsHeight/2);
-            self.swipingBackgoundView.alpha = 0;
+            weakSelf.currentSnapShotView.center = CGPointMake(boundsWidth*3/2, boundsHeight/2);
+            weakSelf.prevSnapShotView.center = CGPointMake(boundsWidth/2, boundsHeight/2);
+            weakSelf.swipingBackgoundView.alpha = 0;
         }completion:^(BOOL finished) {
             
-            [self.webView goBack];
-            [self.snapShotsArray removeLastObject];
-            [self.currentSnapShotView removeFromSuperview];
+            [weakSelf.webView goBack];
+            [weakSelf.snapShotsArray removeLastObject];
+            [weakSelf.currentSnapShotView removeFromSuperview];
             //            [self.prevSnapShotView removeFromSuperview];
-            [self.swipingBackgoundView removeFromSuperview];
+            [weakSelf.swipingBackgoundView removeFromSuperview];
             
-            self.view.userInteractionEnabled = YES;
-            self.isSwipingBack = NO;
+            weakSelf.view.userInteractionEnabled = YES;
+            weakSelf.isSwipingBack = NO;
         }];
     }else{
         //pop fail
         [UIView animateWithDuration:0.2 animations:^{
             [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
             
-            self.currentSnapShotView.center = CGPointMake(boundsWidth/2, boundsHeight/2);
-            self.prevSnapShotView.center = CGPointMake(boundsWidth/2-60, boundsHeight/2);
-            self.prevSnapShotView.alpha = 1;
+            weakSelf.currentSnapShotView.center = CGPointMake(boundsWidth/2, boundsHeight/2);
+            weakSelf.prevSnapShotView.center = CGPointMake(boundsWidth/2-60, boundsHeight/2);
+            weakSelf.prevSnapShotView.alpha = 1;
         }completion:^(BOOL finished) {
-            [self.prevSnapShotView removeFromSuperview];
-            [self.swipingBackgoundView removeFromSuperview];
-            [self.currentSnapShotView removeFromSuperview];
-            self.view.userInteractionEnabled = YES;
+            [weakSelf.prevSnapShotView removeFromSuperview];
+            [weakSelf.swipingBackgoundView removeFromSuperview];
+            [weakSelf.currentSnapShotView removeFromSuperview];
+            weakSelf.view.userInteractionEnabled = YES;
             
-            self.isSwipingBack = NO;
+            weakSelf.isSwipingBack = NO;
         }];
     }
 }
@@ -272,7 +275,11 @@
 }
 
 -(void)closeItemClicked{
+#ifdef DEBUG
     [self.navigationController popViewControllerAnimated:YES];
+#else
+    //do sth.
+#endif
 }
 
 - (void)timerCallback {
@@ -459,3 +466,4 @@
 }
 
 @end
+
